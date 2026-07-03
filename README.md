@@ -76,15 +76,10 @@ Experiments in the paper are conducted on ABIDE and ADHD-200 using fMRI brain ne
 
 ```bibtex
 @article{xu2026saber,
-  title         = {SABER: A Semantic-Aligned Brain Network Analysis Framework via Multi-scale Hypergraphs},
-  author        = {Xu, Yidan and Han, Xiangmin and Xue, Rundong and Ye, Huihui},
-  journal       = {arXiv preprint arXiv:2607.01901},
-  year          = {2026},
-  eprint        = {2607.01901},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  doi           = {10.48550/arXiv.2607.01901},
-  url           = {https://arxiv.org/abs/2607.01901}
+  title={SABER: A Semantic-Aligned Brain Network Analysis Framework via Multi-scale Hypergraphs},
+  author={Xu, Yidan and Han, Xiangmin and Xue, Rundong and Ye, Huihui},
+  journal={arXiv preprint arXiv:2607.01901},
+  year={2026}
 }
 ```
 
