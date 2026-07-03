@@ -1,65 +1,92 @@
 # SABER: A Semantic-Aligned Brain Network Analysis Framework via Multi-scale Hypergraphs
 
-This repository contains the official project page and implementation for:
+Official implementation of **SABER**, a semantic-aligned brain network analysis framework for fMRI-based brain disease diagnosis.
 
+SABER integrates LLM-derived semantic priors with multi-scale hypergraph neural networks. Instead of using language semantics only as auxiliary features, SABER injects semantic information from ROI-level representation learning to graph-level abstraction and decision-level classification.
 
+## Highlights
 
-## News
+- **ROI-level semantic injection**: anatomical and functional ROI descriptions are encoded and fused with functional connectivity features.
+- **Multi-scale hypergraph modeling**: high-order multi-ROI interactions are modeled beyond pairwise graph edges.
+- **Decision-level semantic alignment**: patient-specific textual embeddings directly guide graph-level classification.
+- **Interpretable analysis**: the framework supports discriminative ROI and connection analysis for neurodevelopmental disorder diagnosis.
 
-- Code and documentation will be released soon.
-- The paper will be updated with the arXiv link once available.
+## Repository Structure
 
-## Overview
+```text
+.
+--- llm-main-icme.py
+--- baseline_icme.sh
+--- configs/
+--- data/
+--- layers/
+--- nets/
+--- norm/
+--- trainer.py
+--- metrics.py
+--- utils.py
+--- requirements.txt
+```
 
-SABER is a semantic-aligned brain network analysis framework for brain disease diagnosis from functional magnetic resonance imaging (fMRI). The framework integrates large language model derived clinical semantics with multi-scale hypergraph neural networks, enabling semantic information to actively participate in decision-level brain network classification.
+## Environment
 
-Unlike previous methods that mainly use semantic information as auxiliary features or supervision, SABER introduces semantic priors at multiple levels and aligns patient-specific textual embeddings with graph-level representations. This design improves classification robustness, stability, and interpretability, especially in small-sample neuroimaging scenarios.
+```bash
+conda create -n saber python=3.10 -y
+conda activate saber
+pip install -r requirements.txt
+```
 
-## Key Ideas
+Install the DGL build that matches your CUDA/PyTorch environment if the default `dgl` package is not suitable.
 
-- **ROI-level semantic injection**: anatomical and functional descriptions of brain regions are encoded and fused with connectivity-based node features.
-- **Multi-scale hypergraph modeling**: multiple hypergraphs are constructed to capture high-order and multi-ROI interactions beyond pairwise connectivity.
-- **Decision-level semantic alignment**: patient-specific semantic embeddings are selectively injected into graph representations through a graph-level alignment mechanism.
-- **Interpretable brain network analysis**: the framework supports analysis of discriminative ROIs and functional connections.
+## Data Preparation
 
-## Framework
+Raw/preprocessed fMRI graph binaries are not included because public neuroimaging datasets have their own access and redistribution policies.
 
-The SABER pipeline consists of three main stages:
+For the default ABIDE AAL116 experiment, prepare the DGL graph binary at:
 
-1. **Multi-scale node-level brain network encoding**
-   - Brain regions are represented using functional connectivity features.
-   - ROI semantic embeddings are injected into node representations through global self-attention.
+```text
+data/abide_full_AAL116/abide_full_AAL116.bin
+```
 
-2. **Multi-scale hypergraph representation learning**
-   - Hypergraphs at different scales model high-order dependencies among ROIs.
-   - A gated fusion mechanism adaptively integrates cross-scale representations.
+The repository includes split files, atlas coordinates, and semantic prompt resources used by the training code. If you use another dataset, update `name2path` and `name2coor_path` in `data/BrainNet.py`.
 
-3. **Graph-level semantic alignment**
-   - Patient-level textual semantics are aligned with graph representations.
-   - Semantic information directly guides final disease classification while preserving structural brain network information.
+## Training
 
-## Datasets
+```bash
+bash baseline_icme.sh
+```
 
-Experiments are conducted on two public fMRI brain network datasets:
+Equivalent command:
 
-- **ABIDE I**: Autism Brain Imaging Data Exchange dataset for ASD diagnosis.
-- **ADHD-200**: ADHD-200 dataset for Attention-Deficit/Hyperactivity Disorder diagnosis.
+```bash
+python3 llm-main-icme.py   --gpu_id 0   --model BrainPromptMSHT   --dataset abide_full_AAL116   --config configs/abide_full_AAL116/TUs_graph_classification_BrainPromptMSHT_abide_full_AAL116_100k.json   --epochs 100   --batch_size 16   --init_lr 1e-4   --weight_decay 1e-4   --node_feat_transform pearson   --edge_ratio 0.2   --dropout 0.5   --lambda1 1.0
+```
 
-Both datasets are preprocessed using the DPARSF pipeline in the paper.
+Outputs are written under `out/braindata_graph_classification/`.
 
+## Paper
 
+**SABER: A Semantic-Aligned Brain Network Analysis Framework via Multi-scale Hypergraphs**
 
+Authors: Yidan Xu, Xiangmin Han, Rundong Xue, and Huihui Ye
 
+Experiments in the paper are conducted on ABIDE and ADHD-200 using fMRI brain networks.
 
-The BibTeX entry will be updated after the arXiv version is available.
+## Citation
+
+```bibtex
+@inproceedings{xu2026saber,
+  title     = {SABER: A Semantic-Aligned Brain Network Analysis Framework via Multi-scale Hypergraphs},
+  author    = {Xu, Yidan and Han, Xiangmin and Xue, Rundong and Ye, Huihui},
+  booktitle = {IEEE International Conference on Multimedia and Expo},
+  year      = {2026}
+}
+```
 
 ## Contact
 
-For questions or collaborations, please contact:
-
-- Yidan Xu: YidanXu2024@163.com
-
+For questions, please contact Yidan Xu: YidanXu2024@163.com.
 
 ## License
 
-The license will be specified before the code release.
+This project is released under the MIT License.
